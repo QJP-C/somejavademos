@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>  <!--mybatis-config.xml是MyBatis核心配置文件-->
+    <!-- 配置文件信息 -->
+    <!--  <properties>  一般将数据源的信息单独放在一个properties文件中,然后用这个标签引入,在下面environment标签中，就可以用${}占位符快速获取数据源的信息-->
+    <properties resource="properties/database.properties"></properties> <!--指定配置了数据源的配置文件-->
+
+
+    <!--  <settings>  用来开启或关闭mybatis的一些特性，比如可以用<setting name="lazyLoadingEnabled" value="true"/>来开启延迟加载，
+                      也可以用<settings name="cacheEnabled" value="true"/>来开启二级缓存    -->
+
+    <!--  <typeAliases>  在mapper.xml中需要使用parameterType和resultType属性来配置SQL语句的输入参数类型和输出参数类型，
+                     类必须要写上全限定名，比如一个SQL的返回值映射为Student类，则resultType属性要写com.yogurt.po.Student，
+                     这太长了，所以可以用别名来简化书写，比如  -->
+<!--    <typeAliases>  &lt;!&ndash;给类起别名用的&ndash;&gt;-->
+<!--        <typeAlias type="com.qjp.mybatis.po.Student" alias="student"/>-->
+<!--    </typeAliases>-->
+    <typeAliases>   <!--给某个包下的所有类起别名（小写开头 只为类名）-->
+        <package name="com.qjp.mybatis.po"/>
+    </typeAliases>
+
+    <!--<typeHandlers>--> <!--用于处理Java类型和Jdbc类型之间的转换(不咋用)-->
+    <!--<objectFactory type="">--> <!--不咋用-->
+
+
+    <!--plugins  可以用来配置mybatis的插件  -->
+    <!-- PageHelper 分页插件 -->
+<!--    <plugins>-->
+<!--        <plugin interceptor="com.github.pagehelper.PageInterceptor">-->
+<!--            <property name="helperDialect" value="mysql"/>-->
+<!--        </plugin>-->
+<!--    </plugins>-->
+    <!--<environments> 用来配置数据源-->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <!-- 从配置文件中加载属性 -->
+                <property name="driver" value="${db.driver}"/>
+                <property name="url" value="${db.url}"/>
+                <property name="username" value="${db.user}"/>
+                <property name="password" value="${db.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>  <!--用来配置mapper.xml映射文件，这些xml文件里都是SQL语句-->
+        <!-- 加载前面编写的SQL语句的文件 -->
+<!--        <mapper resource="mapper/StudentMapper.xml"/>  &lt;!&ndash;mapper代理开发 (加载普通的xml文件，传入xml的相对路径(相对于类路径))&ndash;&gt;-->
+<!--        <mapper class="com.qjp.mybatis.mapper.PureStudentMapper"/>   &lt;!&ndash;注解开发 (使用mapper接口的全限定名来加载，若mapper接口采用注解方式，则不需要xml;若mapper接口没有采用注解方式，则mapper接口和xml文件的名称要相同，且在同一个目录)&ndash;&gt;-->
+        <package name="com.qjp.mybatis.mapper"/>  <!--扫描指定包下所有mapper（扫描指定包下的所有mapper，若mapper接口采用注解方式，则不需要xml;若mapper接口没有采用注解方式，则mapper接口和xml文件的名称要相同，且在同一目录）-->
+    </mappers>
+
+    <!--注意：用后两种方式加载mapper接口和mapper.xml映射文件时，可能会报错-->
+    <!--其实是因为，对于src/main/java 源码目录下的文件，maven打包时只会将该目录下的java文件打包，
+    而其他类型的文件都不会被打包进去，去工程目录的target目录下看看maven构建后生成的文件
+    我们需要在pom.xml中的<build> 标签下 添加<resources> 标签，指定打包时要将xml文件打包进去-->
+</configuration>

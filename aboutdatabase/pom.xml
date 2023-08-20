@@ -10,6 +10,10 @@
     </parent>
 
     <artifactId>aboutdatabase</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>mybatis-demo</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

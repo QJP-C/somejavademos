@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>  <!--该文件必须顶格 前面不能有空行-->
+<!DOCTYPE mapper                                 <!--原生版-->
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qjp.mybatis.dao.StudentDao">  <!--命名空间指定对应的mapper位置-->
+    <select id="findAll" resultType="com.qjp.mybatis.po.Student">
+        SELECT * FROM student;
+    </select>
+
+    <insert id="insert" parameterType="com.qjp.mybatis.po.Student">
+        INSERT INTO student (name,score,age,gender) VALUES (#{name},#{score},#{age},#{gender});
+    </insert>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM student WHERE id = #{id};
+    </delete>
+</mapper>
+
