@@ -1,14 +1,11 @@
 package com.qjp.mybatis;
 
 import com.qjp.mybatis.dao.StudentDao;
-import com.qjp.mybatis.po.Student;
 import org.junit.Before;
-import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.List;
 
 @SpringBootTest(classes = MybatisDemoApplication.class)
 public class DaoTest {

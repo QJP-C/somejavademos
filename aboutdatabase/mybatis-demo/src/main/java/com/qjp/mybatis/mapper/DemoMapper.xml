@@ -24,6 +24,7 @@
     </insert>
 
     <!--批量查询-->
+    <!--主要是动态SQL标签的使用，注意如果parameterType是List的话，则在标签体内引用这个List，只能用变量名list，如果parameterType是数组，则只能用变量名array-->
     <select id="batchFind" resultType="student" parameterType="java.util.List">
         SELECT * FROM student
         <where>
@@ -35,5 +36,95 @@
             </if>
         </where>
     </select>
+
+    <!--动态SQL-->
+        <!--if-->
+    <select id="find" resultType="student" parameterType="student">
+        SELECT * FROM student WHERE age >= 18
+        <if test="name != null and name != ''">  <!--当满足test条件时，才会将<if>标签内的SQL语句拼接上去-->
+            AND name like '%${name}%'
+        </if>
+    </select>
+
+        <!-- choose 和 when , otherwise 是配套标签 类似于java中的switch，只会选中满足条件的一个-->
+    <select id="find1" resultType="student">
+        SELECT * FROM student WHERE gender >= 2
+        <choose>
+            <when test="name != null">   /*if*/
+                AND name like #{name}
+            </when>
+            <when test="age != null and score >= 10">     /*else if*/
+                AND  like #{author.name}
+            </when>
+            <otherwise>      /*else*/
+                AND gender = 1
+            </otherwise>
+        </choose>
+    </select>
+
+        <!--trim-->
+            <!--where-->
+            <!--<where>标签只会在至少有一个子元素返回了SQL语句时，才会向SQL语句中添加WHERE，并且如果WHERE之后是以AND或OR开头，会自动将其删掉-->
+    <select id="find2" resultType="student">
+        SELECT * FROM student
+        <where>
+            <if test="name != null">
+                name = #{name}
+            </if>
+            <if test="gender != null">
+                AND gender = #{gender}
+            </if>
+        </where>
+        <!--<where>标签可以用<trim>标签代替-->
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+        </trim>
+    </select>
+
+            <!--set-->
+            <!--在至少有一个子元素返回了SQL语句时，才会向SQL语句中添加SET，并且如果SET之后是以,开头的话，会自动将其删掉-->
+            <!--<set>标签相当于如下的<trim>标签-->
+    <update id="update1" parameterType="student">
+        UPDATE student
+        <set>
+            <if test="gender != 1">
+                age = age + 1
+            </if>
+        </set>
+    </update>
+
+        <!--foreach-->
+        <!--用来做迭代拼接的，通常会与SQL语句中的IN查询条件结合使用，注意，到parameterType为List（链表）或者Array（数组），
+        后面在引用时，参数名必须为list或者array。如在foreach标签中，collection属性则为需要迭代的集合，由于入参是个List，所以参数名必须为list-->
+    <select id="batchFind1" resultType="student" parameterType="list">
+        SELECT * FROM student WHERE id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+        <!--sql-->
+        <!--可将重复的SQL片段提取出来，然后在需要的地方，使用<include>标签进行引用-->
+    <select id="findUser" parameterType="student" resultType="student">
+        SELECT * FROM student
+        <include refid="whereClause"/>
+    </select>
+
+    <sql id="whereClause">
+        <where>
+            <if test="student != null">
+                AND name like '%${name}%'
+            </if>
+        </where>
+    </sql>
+
+
+        <!--bind-->
+        <!--mybatis的动态SQL都是用OGNL表达式进行解析的，如果需要创建OGNL表达式以外的变量，可以用bind标签-->
+    <select id="selectBlogsLike" resultType="student">
+        <bind name="pattern" value="'%' + _parameter.getTitle() + '%'" />
+        SELECT * FROM student
+        WHERE student.name LIKE #{name}
+    </select>
+
 </mapper>
 
