@@ -1,8 +1,11 @@
 package com.qjp.mp;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qjp.mp.Enum.SexEnum;
 import com.qjp.mp.mappers.UserMapper;
 import com.qjp.mp.po.User;
@@ -14,7 +17,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -250,11 +255,78 @@ public class SampleTest {
 	public void testObjectConditions2(){
 		//条件对象
 		User user = new User();
-		user.setName("主");
+		user.setName("主");      //在实体类针对属性用注解做了设置  该字段模糊查询
 //		user.setAge(40);
 		//查询
 		QueryWrapper<User> wrapper = new QueryWrapper<>(user);
 		List<User> users = userService.list(wrapper);
 		users.forEach(System.out::println);
+	}
+
+	//allEq方法
+
+	/**
+	 * allEq方法传入一个map，用来做等值匹配
+	 * 当allEq方法传入的Map中有value为null的元素时，默认会设置为is null
+	 */
+	@Test
+	public void testAllEq(){
+		QueryWrapper<User> wrapper = new QueryWrapper<>();
+		Map<String, Object> param = new HashMap<>();
+		param.put("age", 40);
+		param.put("name", "黄主管");
+		wrapper.allEq(param);
+		List<User> users = userMapper.selectList(wrapper);
+		users.forEach(System.out::println);
+	}
+	/**
+	 * 若想要在执行allEq时，过滤掉Map中的某些元素，可以调用allEq的重载方法allEq(BiPredicate<R, V> filter, Map<R, V> params)
+	 */
+	@Test
+	public void testAllEq1(){
+		QueryWrapper<User> wrapper = new QueryWrapper<>();
+		Map<String, Object> param = new HashMap<>();
+		param.put("age", 40);
+		param.put("name", "黄飞飞");
+		wrapper.allEq((k,v) -> !"name".equals(k), param); // 过滤掉map中key为name的元素
+		List<User> users = userMapper.selectList(wrapper);
+		users.forEach(System.out::println);
+	}
+
+	//update(T entity, Wrapper<T> wrapper)
+	@Test
+	public void testUpdate2() {
+		User user = new User();
+		user.setName("王三蛋");
+		LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
+		wrapper.between(User::getAge, 26,31).likeRight(User::getName,"吴");
+		userMapper.update(user, wrapper);
+	}
+
+	//分页
+	@Test
+	public void testPage() {
+		LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+		wrapper.ge(User::getAge, 28);
+		// 设置分页信息, 查第2页, 每页3条数据
+		Page<User> page = new Page<>(2, 3);
+		// 执行分页查询
+		Page<User> userPage = userMapper.selectPage(page, wrapper);
+		System.out.println("总记录数 = " + userPage.getTotal());
+		System.out.println("总页数 = " + userPage.getPages());
+		System.out.println("当前页码 = " + userPage.getCurrent());
+		// 获取分页查询结果
+		List<User> records = userPage.getRecords();
+		records.forEach(System.out::println);
+	}
+	@Test
+	public void testAuto() {
+		User user = new User();
+		user.setName("我是青蛙呱呱");
+		user.setAge(99);
+		user.setEmail("frog@baomidou.com");
+		user.setCreateTime(LocalDateTime.now());
+		userMapper.insert(user);
+		System.out.println(user.getId());
 	}
 }

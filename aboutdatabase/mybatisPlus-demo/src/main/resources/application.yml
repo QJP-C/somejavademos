@@ -7,3 +7,7 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启SQL语句打印
+  global-config:
+    db-config:
+      id-type: auto  #全局主键策略
+#      table-prefix: xx_           #表前缀

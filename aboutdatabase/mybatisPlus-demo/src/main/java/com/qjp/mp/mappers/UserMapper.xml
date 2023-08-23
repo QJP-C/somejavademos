@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qjp.mp.mappers.UserMapper">
+    <select id="selectRaw1" resultType="com.qjp.mp.po.User"> /*使用xml时，若xml文件与mapper接口文件不在同一目录下，则需要在application.yml中配置mapper.xml的存放路径*/
+        SELECT * FROM user
+    </select>
+</mapper>
