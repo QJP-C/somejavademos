@@ -9,12 +9,10 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>aboutdatabase</artifactId>
+    <artifactId>aboutfile</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>mybatis-demo</module>
-        <module>mybatisPlus-demo</module>
-        <module>redis-demo</module>
+        <module>minio-demo</module>
     </modules>
 
     <properties>

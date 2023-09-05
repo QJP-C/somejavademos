@@ -5,17 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.qjp</groupId>
-        <artifactId>somejavademos</artifactId>
+        <artifactId>aboutfile</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>aboutdatabase</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>mybatis-demo</module>
-        <module>mybatisPlus-demo</module>
-        <module>redis-demo</module>
-    </modules>
+    <artifactId>minio-demo</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

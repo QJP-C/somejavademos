@@ -8,15 +8,20 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="mybatis-demo" />
+        <module name="minio-demo" />
         <module name="mybatisPlus-demo" />
+        <module name="redis-demo" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="aboutdatabase" options="" />
+      <module name="aboutfile" options="" />
+      <module name="minio-demo" options="-parameters" />
       <module name="mybatis-demo" options="-parameters" />
       <module name="mybatisPlus-demo" options="-parameters" />
+      <module name="redis-demo" options="-parameters" />
       <module name="somejavademos" options="" />
     </option>
   </component>
